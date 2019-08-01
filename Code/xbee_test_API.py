@@ -2,7 +2,8 @@
 # Alex Samland
 # 07/30/19
 
-import serial
+from digi.xbee.devices import Raw802Device
+from digi.xbee.devices import RemoteXBeeDevice
 import time
 import threading
 import math
@@ -23,13 +24,15 @@ def serial_listener():
     while True:
         test_str = ser.readline().strip().decode('utf-8')
         # print(test_str)
-ser = serial.Serial('/dev/tty.usbserial-14110', 9600)
+ser = serial.Serial('/dev/tty.usbserial-14310', 9600)
 listener = threading.Thread(target=serial_listener)
 listener.start()
-th = 0
-while True:
-    angle = 90+int(80*math.sin(th))
-    move(angle)
-    print(angle)
-    th+=0.1
-    time.sleep(0.03)
+
+xb = R
+# th = 0
+# while True:
+#     angle = 90+int(90*math.sin(th))
+#     move(angle)
+#     print(angle)
+#     th+=0.1
+#     time.sleep(0.8)
