@@ -22,7 +22,6 @@ class SmarticleSwarm:
         self.base = Raw802Device(port, baud_rate)
         self.debug = debug
         self.open_base()
-        self.base.add_data_received_callback(self.data_receive_callback)
         self.servo_period_s = cycle_period_s
         self.lock = threading.Lock()
 
@@ -50,11 +49,11 @@ class SmarticleSwarm:
         '''Finds smarticles on network and adds them as attributes
         modified from Digi XBee example DiscoverDevicesSample.py'''
 
-        xbee_network = self.base.get_network()
+        self.network = self.base.get_network()
 
-        xbee_network.set_discovery_timeout(15)  # 15 seconds.
+        self.network.set_discovery_timeout(15)  # 15 seconds.
 
-        xbee_network.clear()
+        # xbee_network.clear()
 
         # Callback for discovered devices.
         def callback_device_discovered(remote):
@@ -70,16 +69,16 @@ class SmarticleSwarm:
                 else:
                     print("There was an error discovering devices: %s" % status.description)
 
-        xbee_network.add_device_discovered_callback(callback_device_discovered)
+        self.network.add_device_discovered_callback(callback_device_discovered)
 
-        xbee_network.add_discovery_process_finished_callback(callback_discovery_finished)
+        self.network.add_discovery_process_finished_callback(callback_discovery_finished)
 
-        xbee_network.start_discovery_process()
+        self.network.start_discovery_process()
 
         if self.debug:
             print("Discovering remote XBee devices...")
 
-        while xbee_network.is_discovery_running():
+        while self.network.is_discovery_running():
             time.sleep(0.1)
 
 
@@ -103,12 +102,6 @@ class SmarticleSwarm:
 
         self.base.send_data_broadcast(msg)
 
-    def data_receive_callback(self,xbee_message):
-        '''DOC'''
-
-        print("From {} >> {}".format(xbee_message.remote_device.get_node_id(),
-                                 xbee_message.data.decode()))
-
 
     def go(self, remote_device = None):
         '''DOC'''
@@ -130,13 +123,6 @@ class SmarticleSwarm:
             self.send(remote_device,msg)
 
 
-    @staticmethod
-    def gait(t):
-        '''Doc'''
-
-        return 90+int(90*math.sin(1.5*t))
-
-
     def servo_thread_target(self, gaitf):
         '''DOC'''
 
@@ -152,8 +138,10 @@ class SmarticleSwarm:
             self.lock.acquire()
         self.lock.release()
 
-    def init_servo_thread(self, gait_fun):
+    def init_servo_thread(self, gait_fun=None):
         '''DOC: initializes servo thread'''
+        if gait_fun==None:
+
 
         self.servo_thread = threading.Thread(target=self.servo_thread_target, args= (gait_fun,), daemon = True)
 
@@ -172,11 +160,16 @@ class SmarticleSwarm:
 
 
 
+def example_data_receive_callback(xbee_message):
+    '''DOC'''
 
+    print("From {} >> {}".format(xbee_message.remote_device.get_node_id(),
+                             xbee_message.data.decode()))
 
 
 
 swarm = SmarticleSwarm()
+swarm.base.add_data_received_callback(example_data_receive_callback)
 swarm.discover()
 # swarm.send(swarm.smart1,"message");
 time.sleep(5)
