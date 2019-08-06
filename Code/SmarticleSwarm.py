@@ -4,26 +4,24 @@
 # Module for communicating with smarticle swarm over Xbee3s
 
 import time
-import threading
-import math
 
 from digi.xbee.models.status import NetworkDiscoveryStatus
 from digi.xbee.devices import Raw802Device
 
-class SmarticleSwarm:
+class Xbee(object):
     ''''Class for simplified XBee communication with remote Smarticles
         Built on top of Digi XBee python library:
             https://github.com/digidotcom/xbee-python'''
 
 
-    def __init__(self, port='/dev/tty.usbserial-14120', baud_rate = 9600, debug = 1, cycle_period_s =  0.033):
+    def __init__(self, port='/dev/tty.usbserial-14120', baud_rate = 9600, debug = 1):
         '''adds initalizes local base xbee with given port and baud rate'''
 
         self.base = Raw802Device(port, baud_rate)
         self.debug = debug
         self.open_base()
-        self.servo_period_s = cycle_period_s
-        self.lock = threading.Lock()
+        # self.servo_period_s = cycle_period_s
+        # self.lock = threading.Lock()
 
 
     def open_base(self):
@@ -140,9 +138,6 @@ class SmarticleSwarm:
 
     def init_servo_thread(self, gait_fun=None):
         '''DOC: initializes servo thread'''
-        if gait_fun==None:
-
-
         self.servo_thread = threading.Thread(target=self.servo_thread_target, args= (gait_fun,), daemon = True)
 
 
@@ -168,7 +163,7 @@ def example_data_receive_callback(xbee_message):
 
 
 
-swarm = SmarticleSwarm()
+swarm = Xbee()
 swarm.base.add_data_received_callback(example_data_receive_callback)
 swarm.discover()
 # swarm.send(swarm.smart1,"message");
