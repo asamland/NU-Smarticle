@@ -14,7 +14,7 @@ class Xbee(object):
             https://github.com/digidotcom/xbee-python'''
 
 
-    def __init__(self, port='/dev/tty.usbserial-14120', baud_rate = 9600, debug = 1):
+    def __init__(self, port='/dev/tty.usbserial-14130', baud_rate = 9600, debug = 1):
         '''adds initalizes local base xbee with given port and baud rate'''
 
         self.base = Raw802Device(port, baud_rate)
