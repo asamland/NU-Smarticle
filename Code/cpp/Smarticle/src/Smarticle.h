@@ -55,6 +55,7 @@ class Smarticle
 {
   public:
     Smarticle(int debug=0, int run_servos=0, int transmit=0, int sample_time_ms = 15, int cycle_period_ms = 33);
+    void led_on(int stat);
     void inactive(void);
     void timer_interrupt(void);
     void gait_interpolate(int delay, int len, int* servoL_arr, int* servoR_arr);
@@ -71,6 +72,7 @@ class Smarticle
     int transmit(int);
     int enable_t2_interrupts(void);
     int disable_t2_interrupts(void);
+    void rx_interrupt(uint8_t c);
     PWMServo ServoL;
     PWMServo ServoR;
     NeoSWSerial Xbee;
