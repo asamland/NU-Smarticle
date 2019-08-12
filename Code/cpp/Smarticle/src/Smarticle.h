@@ -21,12 +21,8 @@
 
   Smarticle Modes:
   0   --    Inactive
-  1   --    Plank
-  2   --    Streamed Gait
-  3   --    Square Gait
-  4   --    Triangle Gait
-  5   --    Sine Gait
-  6   --    S-wave Gait
+  1   --    Streamed Gait
+  2   --    Interpolated Gait
 
 
 */
@@ -40,51 +36,61 @@
 
 #define MAX_US 2500
 #define MIN_US 600
+#define RX_PIN 2
+#define TX_PIN 3
+#define LED 13
+#define SERVO_L 10
+#define SERVO_R 9
+#define PRF A2
+#define PRB A0
+#define MIC A3
 
 
 
 
-enum STATES{IDLE, PLANK, STREAM, SQUARE, TRI, SIN, S_WAVE};
+
+enum STATES{IDLE, STREAM, INTERP};
 
 class Smarticle
 {
   public:
-    Smarticle(int debug=0, int run_servos=0, int transmit=0, double sample_time_s = 0.01, double cycle_time_s = 0.033);
+    Smarticle(int debug=0, int run_servos=0, int transmit=0, int sample_time_ms = 15, int cycle_period_ms = 33);
     void inactive(void);
-    void square_gait(void);
-    void triangle_gait(void);
-    void sin_gait(int amp, double freq);
+    void timer_interrupt(void);
+    void gait_interpolate(int delay, int len, int* servoL_arr, int* servoR_arr);
     void stream_servo(void);
-    void plank(void);
     int set_mode(int mode);
-    int get_mode(void);
-    int read_sensors(void);
+    int init_mode(void);
+    enum STATES get_mode(void);
+    int * read_sensors(void);
     int transmit_data(void);
-    int init_xbee(void);
-    int run_servos(void);
+    int interp_msg(void);
+    int attach_servos(void);
+    int detach_servos(void);
+    int run_servos(int);
+    int transmit(int);
+    int enable_t2_interrupts(void);
+    int disable_t2_interrupts(void);
     PWMServo ServoL;
     PWMServo ServoR;
     NeoSWSerial Xbee;
-    double cycle_time_s = 0.04;
+    int cycle_time_ms;
+    int sensor_dat[3];
+    int msg_flag = 0;
   private:
-    const int _prb = A0; //photoresistor back
-    const int _prf = A2; //photoresistor front
-    const int _mic = A3;
-    const int _ssRX = 2; //software serial RX
-    const int _ssTX = 3; //software serial TX
-    const int _servo_right = 9;
-    const int _servo_left = 10;
-    const int _LED = 13;
+    void _plankf(void);
     enum STATES _mode;
     float _t = 0;
     int _debug;
     int _run_servos;
     int _transmit;
-    char  _input_string[50];
-    double _sample_time_s= 0.010;
-    float _cycle_period_s = 0.033;
-    float sin_freq;
-    int sin_amp;
+    String  _input_string;
+    int _sample_time_ms;
+    int _gaitL[15];
+    int _gaitR[15];
+    int _servo_period;
+    int _servo_pts;
+    int _plank;
 
 };
 
