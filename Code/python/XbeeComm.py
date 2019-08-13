@@ -37,13 +37,13 @@ class XbeeComm(object):
         '''takes in remote xbee object and adds it as attribute named after its node ID'''
 
         setattr(self,remote_device.get_node_id(),remote_device)
-        self.devices.append(getattr(self,remote_device.get_node_id()))
+        self.devices[remote_device.get_node_id()]=remote_device
 
 
     def discover(self):
         '''Finds smarticles on network and adds them as attributes
         modified from Digi XBee example DiscoverDevicesSample.py'''
-        self.devices =[]
+        self.devices ={}
         self.network = self.base.get_network()
         self.network.clear()
 
@@ -101,17 +101,17 @@ class XbeeComm(object):
 
 
     def ack_broadcast(self,msg):
-        for remote_dev in self.devices:
+        for remote_dev in list(self.devices.values()):
             self.send(remote_dev,msg)
 
 
     def command(self, msg, remote_device = None):
         if remote_device == None:
             self.broadcast(msg)
-        else if (isinstance(remote_device,int) and remote_device==1):
+        elif (isinstance(remote_device,int) and remote_device==1):
             self.ack_broadcast(msg)
         else:
-            assert(remote_device in self.devices,"Remote Device not found in active devices")
+            assert remote_device in self.devices,"Remote Device not found in active devices"
             self.send(remote_device,msg)
 
 

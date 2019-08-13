@@ -4,7 +4,8 @@
 # Module for communicating with smarticle swarm over Xbee3s
 
 import time
-import XbeeNU
+from XbeeComm import XbeeComm
+import threading
 
 
 class SmarticleSwarm(object):
@@ -13,22 +14,23 @@ class SmarticleSwarm(object):
 
     GI_LENGTH = 15
 
-    def __init__(self, port='/dev/tty.usbserial-DN050I6Q', baud_rate = 9600, debug = 1,cycle_period_ms):
-    '''DOC'''
-        self.xb = XbeeNU(port,baud_rate,debug)
-        self.servo_period_s = cycle_period_ms*0.001
+    def __init__(self, port='/dev/tty.usbserial-DN050I6Q', baud_rate = 9600, debug = 1,servo_period_ms=0):
+        '''DOC'''
+        self.xb = XbeeComm(port,baud_rate,debug)
+        self.servo_period_s = servo_period_ms*0.001
         self.lock = threading.Lock()
 
 
-    def build_network(self, exp_no_smarticles):
+    def build_network(self, exp_no_smarticles=None):
         '''DOC'''
         self.xb.discover()
-        if (len(self.xb.devices)-1)<exp_no_smarticles):
-            inp= input('Failed to discover all expected Smarticles. Retry discovery (Y/N)\n')
-            if inp[0].upper()=='Y':
-                self.build_network(exp_no_smarticles)
-            else:
-                print('Quitting Network Discovery\n')
+        if exp_no_smarticles != None:
+            if (len(self.xb.devices)-1)<exp_no_smarticles:
+                inp= input('Failed to discover all expected Smarticles. Retry discovery (Y/N)\n')
+                if inp[0].upper()=='Y':
+                    self.build_network(exp_no_smarticles)
+                else:
+                    print('Network Discovery Ended\n')
 
 
 
@@ -50,7 +52,7 @@ class SmarticleSwarm(object):
         self.xb.command(msg, remote_device, ack)
 
     def set_mode(self, state, remote_device = None):
-        assert((state>=0 and state<=2),"Mode must between 0-2")
+        assert (state>=0 and state<=2),"Mode must between 0-2"
         msg = 'MODE:{}'.format(int(state))
         self.xb.command(msg, remote_device)
 
@@ -67,8 +69,10 @@ class SmarticleSwarm(object):
         self.xb.command(msg, remote_device)
 
 
-    def gait_interpolate(self, gaitL, gaitR, period_ms=250, remote_device = None):
-        assert(len(gaitL)==len(gaitR),'Gait lists must be same length')
+    def gait_interpolate(self, gait, period_ms=250, remote_device = None):
+        gaitL=gait[0]
+        gaitR=gait[1]
+        assert len(gaitL)==len(gaitR),'Gait lists must be same length'
         gait_points = len(gaitL)
         if gait_points != self.GI_LENGTH:
             while len(gaitL)!=self.GI_LENGTH:
