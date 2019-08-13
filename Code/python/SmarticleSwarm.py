@@ -1,124 +1,81 @@
-# smarticle_swarm.py
+# SmarticleSwarm.py
 # Alex Samland
-# August 1, 2019
+# August 13, 2019
 # Module for communicating with smarticle swarm over Xbee3s
 
 import time
-
-from digi.xbee.models.status import NetworkDiscoveryStatus
-from digi.xbee.devices import Raw802Device
-
-class Xbee(object):
-    ''''Class for simplified XBee communication with remote Smarticles
-        Built on top of Digi XBee python library:
-            https://github.com/digidotcom/xbee-python'''
+import XbeeNU
 
 
-    def __init__(self, port='/dev/tty.usbserial-14330', baud_rate = 9600, debug = 1):
-        '''adds initalizes local base xbee with given port and baud rate'''
+class SmarticleSwarm(object):
+    '''Class that Utilizies XbeeNU class for performing smarticle operations
+    coordinated with Smarticle.h and Smarticle.cpp used on the Smarticles'''
 
-        self.base = Raw802Device(port, baud_rate)
-        self.debug = debug
-        self.open_base()
-        # self.servo_period_s = cycle_period_s
-        # self.lock = threading.Lock()
+    GI_LENGTH = 15
 
-
-    def open_base(self):
-        '''Opens xbee defined by attribute 'base' '''
-        success = 0
-        self.base.open()
-        if self.base is not None and self.base.is_open():
-            sucess = 1
-        elif self.debug:
-            print("Failed to open device")
-        self.devices = [self.base.get_node_id()]
-        return sucess
+    def __init__(self, port='/dev/tty.usbserial-DN050I6Q', baud_rate = 9600, debug = 1,cycle_period_ms):
+    '''DOC'''
+        self.xb = XbeeNU(port,baud_rate,debug)
+        self.servo_period_s = cycle_period_ms*0.001
+        self.lock = threading.Lock()
 
 
-    def add_remote(self,remote_device):
-        '''takes in remote xbee object and adds it as attribute named after its node ID'''
-
-        setattr(self,remote_device.get_node_id(),remote_device)
-        self.devices.append(remote_device.get_node_id())
-
-
-    def discover(self):
-        '''Finds smarticles on network and adds them as attributes
-        modified from Digi XBee example DiscoverDevicesSample.py'''
-
-        self.network = self.base.get_network()
-
-        self.network.set_discovery_timeout(15)  # 15 seconds.
-
-        # xbee_network.clear()
-
-        # Callback for discovered devices.
-        def callback_device_discovered(remote):
-            if self.debug:
-                print("Device discovered: %s" % remote)
-            self.add_remote(remote)
-
-        # Callback for discovery finished.
-        def callback_discovery_finished(status):
-            if self.debug:
-                if status == NetworkDiscoveryStatus.SUCCESS:
-                    print("Discovery process finished successfully.\nDevices: {}".format(self.devices))
-                else:
-                    print("There was an error discovering devices: %s" % status.description)
-
-        self.network.add_device_discovered_callback(callback_device_discovered)
-
-        self.network.add_discovery_process_finished_callback(callback_discovery_finished)
-
-        self.network.start_discovery_process()
-
-        if self.debug:
-            print("Discovering remote XBee devices...")
-
-        while self.network.is_discovery_running():
-            time.sleep(0.1)
-
-
-    def send(self, remote_device, msg):
-        '''sends string to dest xbee, modified from digi's example SendDataSample.py'''
-
-        if remote_device is None:
-            if self.debug():
-                print("Could not find the remote device")
-            exit(1)
-        if self.debug:
-            print("Sending data to {} >> {}...".format(remote_device.get_node_id(), msg))
-
-        self.base.send_data(remote_device, msg)
-
-        if self.debug:
-            print("Success")
-
-    def broadcast(self, msg):
-        '''broadcasts to all xbees on network'''
-
-        self.base.send_data_broadcast(msg)
-
-
-    def go(self, remote_device = None):
+    def build_network(self, exp_no_smarticles):
         '''DOC'''
+        self.xb.discover()
+        if (len(self.xb.devices)-1)<exp_no_smarticles):
+            inp= input('Failed to discover all expected Smarticles. Retry discovery (Y/N)\n')
+            if inp[0].upper()=='Y':
+                self.build_network(exp_no_smarticles)
+            else:
+                print('Quitting Network Discovery\n')
 
-        msg = 'GO!\n'
-        if remote_device == None:
-            self.broadcast(msg)
-        else:
-            self.send(remote_device,msg)
 
 
-    def stop(self, remote_device = None):
+    def set_servos(self, state, remote_device = None):
         '''DOC'''
-
-        msg = 'STOP!\n'
-        if remote_device == None:
-            self.broadcast(msg)
+        if (state==1):
+            msg = 'START SERVO\n'
         else:
-            self.send(remote_device,msg)
+            msg = 'STOP SERVO\n'
+        self.xb.command(msg, remote_device)
+
+
+    def set_transmit(self, state, remote_device = None):
+        '''DOC'''
+        if (state==1):
+            msg = 'START TRANSMIT\n'
+        else:
+            msg = 'STOP TRANSMIT\n'
+        self.xb.command(msg, remote_device, ack)
+
+    def set_mode(self, state, remote_device = None):
+        assert((state>=0 and state<=2),"Mode must between 0-2")
+        msg = 'MODE:{}'.format(int(state))
+        self.xb.command(msg, remote_device)
+
+    def set_plank(self, state, remote_device = None):
+        if (state==1):
+            msg = 'PLANK\n'
+        else:
+            msg = 'DEPLANK\n'
+        self.xb.command(msg, remote_device, ack)
+
+    def set_pose(self, posL, posR, remote_device = None):
+        '''DOC'''
+        msg='POS:{},{}'.format(int(posL),int(posR))
+        self.xb.command(msg, remote_device)
+
+
+    def gait_interpolate(self, gaitL, gaitR, period_ms=250, remote_device = None):
+        assert(len(gaitL)==len(gaitR),'Gait lists must be same length')
+        gait_points = len(gaitL)
+        if gait_points != self.GI_LENGTH:
+            while len(gaitL)!=self.GI_LENGTH:
+                gaitL.append(0)
+                gaitR.append(0)
+        msg = 'GI:{},{},{},{}'.format(period_ms,gait_points,gaitL,gaitR)
+        self.xb.command(msg, remote_device)
 
 
     def servo_thread_target(self, gaitf):
@@ -129,7 +86,7 @@ class Xbee(object):
         while self.run_servos:
             self.lock.release()
             t0 = time.time()
-            self.broadcast('{}\n'.format(int(gaitf(t))))
+            self.xb.broadcast('{}\n'.format(int(gaitf(t))))
             t += self.servo_period_s
             while ((time.time()-t0)<self.servo_period_s):
                 time.sleep(0.001)
@@ -141,30 +98,13 @@ class Xbee(object):
         self.servo_thread = threading.Thread(target=self.servo_thread_target, args= (gait_fun,), daemon = True)
 
 
-    def start_servos(self):
+    def start_servo_thread(self):
         '''DOC'''
         with self.lock:
             self.run_servos = 1
-        swarm.servo_thread.start()
+        self.servo_thread.start()
 
-    def stop_servos(self):
+    def stop_servo_thread(self):
         '''DOC'''
         with self.lock:
             self.run_servos = 0
-
-
-
-
-def example_data_receive_callback(xbee_message):
-    '''DOC'''
-
-    print("From {} >> {}".format(xbee_message.remote_device.get_node_id(),
-                             xbee_message.data.decode()))
-
-
-
-swarm = Xbee()
-swarm.base.add_data_received_callback(example_data_receive_callback)
-swarm.discover()
-# swarm.send(swarm.smart1,"message");
-time.sleep(5)
