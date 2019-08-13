@@ -49,7 +49,7 @@
 
 
 
-enum STATES{IDLE, STREAM, INTERP};
+enum STATES{IDLE = 0, STREAM=1, INTERP=2};
 
 class Smarticle
 {
@@ -90,8 +90,8 @@ class Smarticle
     int _sample_time_ms;
     int _gaitL[15];
     int _gaitR[15];
-    int _servo_period;
-    int _servo_pts;
+    int _gait_period=500;
+    int _gait_pts=1;
     int _plank;
 
 };
