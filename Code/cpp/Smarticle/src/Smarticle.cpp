@@ -35,7 +35,6 @@ Smarticle:: Smarticle(int debug, int run_servos, int transmit, int sample_time_m
   _mode = IDLE;
   _run_servos = run_servos;
   _transmit = transmit;
-  // _input_string.reserve(200);
   _sample_time_ms = sample_time_ms;
   cycle_time_ms = cycle_period_ms;
   //set prescaler to 32 >> overflow period = 2.048ms
@@ -141,55 +140,46 @@ enum STATES Smarticle::get_mode(void)
 int Smarticle::interp_msg(void)
 {
   Xbee.printf("DEBUG: MESSAGE RECEIVED!!\n");
-  String InputString=String(_input_string);
-  InputString = String(_input_string);
-
-  Xbee.println(InputString);
-  _input_string="";
+  Xbee.printf("Received message: %s\n",_input_msg);
   disable_t2_interrupts();
   msg_flag = 0;
-  Xbee.println(InputString.substring(0,3));
-  if (_mode==INTERP&InputString.substring(0,3)=="GI:"){
-    char str[100];
-    InputString.toCharArray(str,100);
-    if(sscanf(str,"GI:%d,%d,[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d],[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d]",
-    &_gait_period,&_gait_pts,&_gaitL[0],&_gaitL[1],&_gaitL[2],&_gaitL[3],&_gaitL[4],&_gaitL[5],&_gaitL[6],&_gaitL[7],&_gaitL[8],&_gaitL[9],&_gaitL[10],&_gaitL[11],&_gaitL[12],&_gaitL[13],&_gaitL[14],
-    &_gaitR[0],&_gaitR[1],&_gaitR[2],&_gaitR[3],&_gaitR[4],&_gaitR[5],&_gaitR[6],&_gaitR[7],&_gaitR[8],&_gaitR[9],&_gaitR[10],&_gaitR[11],&_gaitR[12],&_gaitR[13],&_gaitR[14])){
-      // _plankf();
-      _plank=0;
+  if (_input_msg[0]!=':'){
+    Xbee.printf("DEBUG: no match :(\n");
+    // enable_t2_interrupts();
+    return 0;
+  }else if (_mode==INTERP&& _input_msg[1]=='G'&& _input_msg[2]=='I'){
+      sscanf(_input_msg,":GI:%2d,%4d",&_gait_pts,&_gait_period);
+      for (int ii=0; ii<_gait_pts; ii++){
+        _gaitL[ii]=_input_msg[GI_OFFSET+ii];
+        _gaitR[ii]=_input_msg[GI_OFFSET+MAX_GAIT_SIZE+ii];
+      }
       Xbee.printf("DEBUG: GI %dms period, %d points\n",_gait_period,_gait_pts);
-      delay(500);
-    }
+      _plank=0;
   }else if (_mode==STREAM){
-  }else if (InputString.substring(0,5)=="MODE:"){
+  }else if (_input_msg[1]=='M'){
     Xbee.printf("DEBUG: MODE CHANGE!\n");
     _run_servos = 0;
-    char buff[30];
-    InputString.toCharArray(buff,30);
     int m=0;
     if (InputString.length()==6){
       Xbee.printf("matches length\n");
-      sscanf(buff,"MODE:%d,",&m);
+      sscanf(buff,":M:%d,",&m);
     }
     Xbee.printf("m = %d\n",m);
     set_mode(m);
     enable_t2_interrupts();
     return 1;
-  } else if(InputString=="STOP SERVO"){ run_servos(0);
-} else if(InputString=="START SERVO"){ run_servos(1);
-} else if(InputString=="START TRANSMIT"){ transmit(1);
-} else if(InputString=="STOP TRANSMIT"){ transmit(0);
-} else if(InputString=="PLANK"){ _plank=1; Xbee.printf("DEBUG: START PLANK!\n");
-} else if(InputString=="DEPLANK"){ _plank=0; Xbee.printf("DEBUG: STOP PLANK!\n");
-} else if (InputString.substring(0,4)=="POS:"){
+  } else if(_input_msg[1]=='S'&&_input_msg[3]=='0'){ run_servos(0);
+} else if(_input_msg[1]=='S'&&_input_msg[3]=='1'){ run_servos(1);
+} else if(_input_msg[1]=='T'&&_input_msg[3]=='1'){ transmit(1);
+} else if(_input_msg[1]=='T'&&_input_msg[3]=='0'){ transmit(0);
+} else if(_input_msg[1]=='P'&&_input_msg[3]=='1'){ _plank=1; Xbee.printf("DEBUG: START PLANK!\n");
+} else if(_input_msg[1]=='P'&&_input_msg[3]=='0'){ _plank=0; Xbee.printf("DEBUG: STOP PLANK!\n");
+} else if (_input_msg[1]=='S'&&_input_msg[2]=='P'){
   _run_servos=0;
-  char buff[30];
-  InputString.toCharArray(buff,30);
   int angL=90,angR=90;
-  sscanf(buff,"POS:%d,%d",&angL, &angR);
+  sscanf(buff,":SP:%d,%d",&angL, &angR);
   ServoL.write(angL);
   ServoR.write(angR);
-
   } else{
     Xbee.printf("DEBUG: no match :(\n");
     // enable_t2_interrupts();
@@ -271,9 +261,14 @@ int Smarticle::disable_t2_interrupts(void)
 void Smarticle::rx_interrupt(uint8_t c)
 {
   if (c=='\n'){
+    while (msg_flag==1){}
     msg_flag=1;
+    strcpy(_input_msg,_input_string);
+    _input_string[0]='\0';
   }else{
-    _input_string+= (char) c;
+    int len = strlen(_input_string);
+    _input_string[len++]= c;
+    _input_string[len]='\0';
   }
 
 }

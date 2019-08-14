@@ -30,9 +30,11 @@
 #ifndef __SMARTICLE_H__
 #define __SMARTICLE_H__
 
+#include <string.h>
 #include "Arduino.h"
 #include "PWMServo.h"
 #include "NeoSWSerial.h"
+
 
 #define MAX_US 2500
 #define MIN_US 600
@@ -44,6 +46,8 @@
 #define PRF A2
 #define PRB A0
 #define MIC A3
+#define MAX_GAIT_SIZE 15
+#define GI_OFFSET 12
 
 
 
@@ -86,10 +90,11 @@ class Smarticle
     int _debug;
     int _run_servos;
     int _transmit;
-    String  _input_string;
+    char  _input_string[120];
+    char _input_msg[120];
     int _sample_time_ms;
-    int _gaitL[15];
-    int _gaitR[15];
+    int _gaitL[MAX_GAIT_SIZE];
+    int _gaitR[MAX_GAIT_SIZE];
     int _gait_period=500;
     int _gait_pts=1;
     int _plank;
