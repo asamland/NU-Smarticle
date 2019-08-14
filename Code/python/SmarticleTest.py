@@ -14,6 +14,13 @@ def rx_callback(xbee_message):
 swarm = SmarticleSwarm()
 swarm.xb.add_rx_callback(rx_callback)
 swarm.build_network(2)
-L = [randint(0,180) for x in range(15)]
-R = [randint(0,180) for x in range(15)]
+L = [randint(32,212) for x in range(15)]
+R = [randint(32,212) for x in range(15)]
 g = [L,R]
+pts = 15
+period = 250
+header = ":GI:{:02},{:04},".format(pts,period)
+bH = bytearray(header,'utf-8')
+bL = bytearray(L)
+bR = bytearray(R)
+bMsg = bH+bL+bR + bytearray('\n','utf-8')

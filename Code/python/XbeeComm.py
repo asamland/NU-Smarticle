@@ -97,7 +97,7 @@ class XbeeComm(object):
 
     def broadcast(self, msg):
         '''broadcasts to all xbees on network'''
-        bp()
+        # bp()
         self.base.send_data_broadcast(msg)
 
 
