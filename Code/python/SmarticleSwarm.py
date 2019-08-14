@@ -26,7 +26,7 @@ class SmarticleSwarm(object):
         self.xb.discover()
         if exp_no_smarticles != None:
             if (len(self.xb.devices)-1)<exp_no_smarticles:
-                inp= input('Failed to discover all expected Smarticles. Retry discovery (Y/N)\n')
+                inp= input('Failed to discover all {} expected Smarticles. Retry discovery (Y/N)\n'.format(exp_no_smarticles))
                 if inp[0].upper()=='Y':
                     self.build_network(exp_no_smarticles)
                 else:
@@ -53,7 +53,7 @@ class SmarticleSwarm(object):
 
     def set_mode(self, state, remote_device = None):
         assert (state>=0 and state<=2),"Mode must between 0-2"
-        msg = 'MODE:{}'.format(int(state))
+        msg = 'MODE:{}\n'.format(int(state))
         self.xb.command(msg, remote_device)
 
     def set_plank(self, state, remote_device = None):
@@ -61,15 +61,15 @@ class SmarticleSwarm(object):
             msg = 'PLANK\n'
         else:
             msg = 'DEPLANK\n'
-        self.xb.command(msg, remote_device, ack)
+        self.xb.command(msg, remote_device)
 
     def set_pose(self, posL, posR, remote_device = None):
         '''DOC'''
-        msg='POS:{},{}'.format(int(posL),int(posR))
+        msg='POS:{},{}\n'.format(int(posL),int(posR))
         self.xb.command(msg, remote_device)
 
 
-    def gait_interpolate(self, gait, period_ms=250, remote_device = None):
+    def gi(self, gait, period_ms=250, remote_device = None):
         gaitL=gait[0]
         gaitR=gait[1]
         assert len(gaitL)==len(gaitR),'Gait lists must be same length'
@@ -78,7 +78,8 @@ class SmarticleSwarm(object):
             while len(gaitL)!=self.GI_LENGTH:
                 gaitL.append(0)
                 gaitR.append(0)
-        msg = 'GI:{},{},{},{}'.format(period_ms,gait_points,gaitL,gaitR)
+        msg = 'GI:{},{},{},{}\n'.format(period_ms,gait_points,gaitL,gaitR)
+        msg=  msg.replace(' ','')
         self.xb.command(msg, remote_device)
 
 

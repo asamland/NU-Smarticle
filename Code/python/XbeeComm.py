@@ -4,6 +4,7 @@
 # Module for communicating with smarticle swarm over Xbee3s
 
 import time
+from pdb import set_trace as bp
 
 from digi.xbee.models.status import NetworkDiscoveryStatus
 from digi.xbee.devices import Raw802Device
@@ -96,7 +97,7 @@ class XbeeComm(object):
 
     def broadcast(self, msg):
         '''broadcasts to all xbees on network'''
-
+        bp()
         self.base.send_data_broadcast(msg)
 
 
@@ -108,20 +109,23 @@ class XbeeComm(object):
     def command(self, msg, remote_device = None):
         if remote_device == None:
             self.broadcast(msg)
-        elif (isinstance(remote_device,int) and remote_device==1):
+        elif (isinstance(remote_device,bool) and remote_device==True):
             self.ack_broadcast(msg)
         else:
             assert remote_device in self.devices,"Remote Device not found in active devices"
             self.send(remote_device,msg)
 
+    def add_rx_callback(self, callback_fun):
+        self.base.add_data_received_callback(callback_fun)
 
 
 
 
 
 
-def example_data_receive_callback(xbee_message):
-    '''DOC'''
 
-    print("From {} >> {}".format(xbee_message.remote_device.get_node_id(),
-                             xbee_message.data.decode()))
+# def example_data_receive_callback(xbee_message):
+#     '''DOC'''
+#
+#     print("From {} >> {}".format(xbee_message.remote_device.get_node_id(),
+#                              xbee_message.data.decode()))
