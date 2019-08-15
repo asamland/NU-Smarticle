@@ -80,7 +80,7 @@ void Smarticle::timer_interrupt(void)
   return;
 }
 
-void Smarticle::gait_interpolate(int delay, int len, int *servoL_arr, int *servoR_arr)
+void Smarticle::gait_interpolate(int delay, int len, uint8_t *servoL_arr, uint8_t *servoR_arr)
 {
   static int tt, index;
   if (tt>=(2*delay)){
@@ -103,7 +103,7 @@ void Smarticle:: stream_servo(void)
 
 int Smarticle::set_mode(int mode)
 {
-  Xbee.printf("Mode input: %d\n", mode);
+  // Xbee.printf("Mode input: %d\n", mode);
   switch(mode){
     case 0: _mode = IDLE;break;
     case 1: _mode = STREAM;break;
@@ -112,7 +112,7 @@ int Smarticle::set_mode(int mode)
   }
   init_mode();
   _plank = 0;
-  Xbee.printf("DEBUG: Mode Set to: %d!\n",_mode);
+  // Xbee.printf("DEBUG: Mode Set to: %d!\n",_mode);
   return 1;
 }
 
@@ -139,32 +139,33 @@ enum STATES Smarticle::get_mode(void)
 
 int Smarticle::interp_msg(void)
 {
-  Xbee.printf("DEBUG: MESSAGE RECEIVED!!\n");
-  Xbee.printf("Received message: %s\n",_input_msg);
+  // Xbee.printf("DEBUG: MESSAGE RECEIVED!!\n");
+  // Xbee.printf("Received message: %s\n",_input_msg);
   disable_t2_interrupts();
   msg_flag = 0;
   if (_input_msg[0]!=':'){
-    Xbee.printf("DEBUG: no match :(\n");
+    // Xbee.printf("DEBUG: no match :(\n");
     // enable_t2_interrupts();
     return 0;
   }else if (_mode==INTERP&& _input_msg[1]=='G'&& _input_msg[2]=='I'){
-      sscanf(_input_msg,":GI:%2d,%4d",&_gait_pts,&_gait_period);
+      sscanf(_input_msg,":GI:%2d,%4d;",&_gait_pts,&_gait_period);
       for (int ii=0; ii<_gait_pts; ii++){
-        _gaitL[ii]=_input_msg[GI_OFFSET+ii];
-        _gaitR[ii]=_input_msg[GI_OFFSET+MAX_GAIT_SIZE+ii];
+        _gaitL[ii]=_input_msg[GI_OFFSET+ii]-ASCII_OFFSET;
+        _gaitR[ii]=_input_msg[GI_OFFSET+MAX_GAIT_SIZE+ii]-ASCII_OFFSET;
+        // Xbee.printf("Index:\t%d\tL:%d\tR:%d\n",ii,_gaitL[ii],_gaitR[ii]);
       }
-      Xbee.printf("DEBUG: GI %dms period, %d points\n",_gait_period,_gait_pts);
+      // Xbee.printf("DEBUG: GI %dms period, %d points\n",_gait_period,_gait_pts);
       _plank=0;
   }else if (_mode==STREAM){
   }else if (_input_msg[1]=='M'){
-    Xbee.printf("DEBUG: MODE CHANGE!\n");
+    // Xbee.printf("DEBUG: MODE CHANGE!\n");
     _run_servos = 0;
     int m=0;
-    if (InputString.length()==6){
-      Xbee.printf("matches length\n");
-      sscanf(buff,":M:%d,",&m);
+    if (strlen(_input_msg)==4){
+      // Xbee.printf("matches length\n");
+      sscanf(_input_msg,":M:%d,",&m);
     }
-    Xbee.printf("m = %d\n",m);
+    // Xbee.printf("m = %d\n",m);
     set_mode(m);
     enable_t2_interrupts();
     return 1;
@@ -172,16 +173,16 @@ int Smarticle::interp_msg(void)
 } else if(_input_msg[1]=='S'&&_input_msg[3]=='1'){ run_servos(1);
 } else if(_input_msg[1]=='T'&&_input_msg[3]=='1'){ transmit(1);
 } else if(_input_msg[1]=='T'&&_input_msg[3]=='0'){ transmit(0);
-} else if(_input_msg[1]=='P'&&_input_msg[3]=='1'){ _plank=1; Xbee.printf("DEBUG: START PLANK!\n");
-} else if(_input_msg[1]=='P'&&_input_msg[3]=='0'){ _plank=0; Xbee.printf("DEBUG: STOP PLANK!\n");
+} else if(_input_msg[1]=='P'&&_input_msg[3]=='1'){ _plank=1; //Xbee.printf("DEBUG: START PLANK!\n");
+} else if(_input_msg[1]=='P'&&_input_msg[3]=='0'){ _plank=0; //Xbee.printf("DEBUG: STOP PLANK!\n");
 } else if (_input_msg[1]=='S'&&_input_msg[2]=='P'){
   _run_servos=0;
   int angL=90,angR=90;
-  sscanf(buff,":SP:%d,%d",&angL, &angR);
+  sscanf(_input_msg,":SP:%d,%d",&angL, &angR);
   ServoL.write(angL);
   ServoR.write(angR);
   } else{
-    Xbee.printf("DEBUG: no match :(\n");
+    // Xbee.printf("DEBUG: no match :(\n");
     // enable_t2_interrupts();
     return 0;
   }
@@ -221,27 +222,27 @@ int Smarticle::attach_servos(void)
   ServoR.attach(SERVO_R,MIN_US,MAX_US);
   ServoL.write(90);
   ServoR.write(90);
-  Xbee.printf("DEBUG: Servos Attached!\n");
+  // Xbee.printf("DEBUG: Servos Attached!\n");
 }
 
 int Smarticle::detach_servos(void)
 {
   ServoL.detach();
   ServoR.detach();
-  Xbee.printf("DEBUG: Servos Detached!\n");
+  // Xbee.printf("DEBUG: Servos Detached!\n");
 }
 
 
 int Smarticle::run_servos(int run)
 {
-   Xbee.printf("DEBUG: TOGGLE SERVOS!\n");
+   // Xbee.printf("DEBUG: TOGGLE SERVOS!\n");
   _run_servos = run;
   return 1;
 }
 
 int Smarticle::transmit(int run)
 {
-  Xbee.printf("DEBUG: TOGGLE TRANSMIT!\n");
+  // Xbee.printf("DEBUG: TOGGLE TRANSMIT!\n");
   _transmit = run;
   return 1;
 }
@@ -249,13 +250,13 @@ int Smarticle::transmit(int run)
 int Smarticle::enable_t2_interrupts(void)
 {
   TIMSK2 = 1<<TOIE2;
-  Xbee.printf("DEBUG: T2 interrupt enabled!\n");
+  // Xbee.printf("DEBUG: T2 interrupt enabled!\n");
 }
 
 int Smarticle::disable_t2_interrupts(void)
 {
   TIMSK2 = 0<<TOIE2;
-  Xbee.printf("DEBUG: T2 interrupt disabled!\n");
+  // Xbee.printf("DEBUG: T2 interrupt disabled!\n");
 }
 
 void Smarticle::rx_interrupt(uint8_t c)

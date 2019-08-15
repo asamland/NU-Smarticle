@@ -48,6 +48,8 @@
 #define MIC A3
 #define MAX_GAIT_SIZE 15
 #define GI_OFFSET 12
+#define ASCII_OFFSET 32
+#define MAX_DATA_PAYLOAD 108
 
 
 
@@ -62,7 +64,7 @@ class Smarticle
     void led_on(int stat);
     void inactive(void);
     void timer_interrupt(void);
-    void gait_interpolate(int delay, int len, int* servoL_arr, int* servoR_arr);
+    void gait_interpolate(int delay, int len, uint8_t* servoL_arr, uint8_t* servoR_arr);
     void stream_servo(void);
     int set_mode(int mode);
     int init_mode(void);
@@ -90,11 +92,11 @@ class Smarticle
     int _debug;
     int _run_servos;
     int _transmit;
-    char  _input_string[120];
-    char _input_msg[120];
+    char  _input_string[108];
+    char _input_msg[108];
     int _sample_time_ms;
-    int _gaitL[MAX_GAIT_SIZE];
-    int _gaitR[MAX_GAIT_SIZE];
+    uint8_t _gaitL[MAX_GAIT_SIZE];
+    uint8_t _gaitR[MAX_GAIT_SIZE];
     int _gait_period=500;
     int _gait_pts=1;
     int _plank;

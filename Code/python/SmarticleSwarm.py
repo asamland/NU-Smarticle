@@ -13,6 +13,7 @@ class SmarticleSwarm(object):
     coordinated with Smarticle.h and Smarticle.cpp used on the Smarticles'''
 
     GI_LENGTH = 15
+    ASCII_OFFSET = 32
 
     def __init__(self, port='/dev/tty.usbserial-DN050I6Q', baud_rate = 9600, debug = 1,servo_period_ms=0):
         '''DOC'''
@@ -37,49 +38,52 @@ class SmarticleSwarm(object):
     def set_servos(self, state, remote_device = None):
         '''DOC'''
         if (state==1):
-            msg = 'START SERVO\n'
+            msg = ':S:1\n'
         else:
-            msg = 'STOP SERVO\n'
+            msg = ':S:0\n'
         self.xb.command(msg, remote_device)
 
 
     def set_transmit(self, state, remote_device = None):
         '''DOC'''
         if (state==1):
-            msg = 'START TRANSMIT\n'
+            msg = ':T:1\n'
         else:
-            msg = 'STOP TRANSMIT\n'
+            msg = ':T:0\n'
         self.xb.command(msg, remote_device, ack)
 
     def set_mode(self, state, remote_device = None):
         assert (state>=0 and state<=2),"Mode must between 0-2"
-        msg = 'MODE:{}\n'.format(int(state))
+        msg = ':M:{}\n'.format(int(state))
         self.xb.command(msg, remote_device)
 
     def set_plank(self, state, remote_device = None):
         if (state==1):
-            msg = 'PLANK\n'
+            msg = ':P:1\n'
         else:
-            msg = 'DEPLANK\n'
+            msg = ':P:0\n'
         self.xb.command(msg, remote_device)
 
     def set_pose(self, posL, posR, remote_device = None):
         '''DOC'''
-        msg='POS:{},{}\n'.format(int(posL),int(posR))
+        msg=':SP:{},{}\n'.format(int(posL),int(posR))
         self.xb.command(msg, remote_device)
 
 
     def gi(self, gait, period_ms=250, remote_device = None):
         gaitL=gait[0]
         gaitR=gait[1]
+        gaitL = [x+self.ASCII_OFFSET for x in gaitL]
+        gaitR = [x+self.ASCII_OFFSET for x in gaitR]
         assert len(gaitL)==len(gaitR),'Gait lists must be same length'
         gait_points = len(gaitL)
         if gait_points != self.GI_LENGTH:
             while len(gaitL)!=self.GI_LENGTH:
-                gaitL.append(0)
-                gaitR.append(0)
-        msg = 'GI:{},{},{},{}\n'.format(period_ms,gait_points,gaitL,gaitR)
-        msg=  msg.replace(' ','')
+                gaitL.append(self.ASCII_OFFSET)
+                gaitR.append(self.ASCII_OFFSET)
+        str = ':GI:{:02},{:04};'.format(gait_points,period_ms)
+        b_str = bytearray(str,'utf-8')
+        msg=  b_str+bytearray(gaitL)+bytearray(gaitR)+bytearray('\n','utf-8')
         self.xb.command(msg, remote_device)
 
 
