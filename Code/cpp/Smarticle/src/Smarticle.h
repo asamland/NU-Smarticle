@@ -84,7 +84,7 @@ class Smarticle
     NeoSWSerial Xbee;
     int cycle_time_ms;
     int sensor_dat[3];
-    int msg_flag = 0;
+    volatile int msg_flag = 0;
   private:
     void _plankf(void);
     enum STATES _mode;
@@ -92,8 +92,8 @@ class Smarticle
     int _debug;
     int _run_servos;
     int _transmit;
-    char  _input_string[108];
-    char _input_msg[108];
+    volatile char  _input_string[108];
+    volatile char _input_msg[108];
     int _sample_time_ms;
     uint8_t _gaitL[MAX_GAIT_SIZE];
     uint8_t _gaitR[MAX_GAIT_SIZE];

@@ -26,7 +26,7 @@ class SmarticleSwarm(object):
         '''DOC'''
         self.xb.discover()
         if exp_no_smarticles != None:
-            if (len(self.xb.devices)-1)<exp_no_smarticles:
+            if (len(self.xb.devices))<exp_no_smarticles:
                 inp= input('Failed to discover all {} expected Smarticles. Retry discovery (Y/N)\n'.format(exp_no_smarticles))
                 if inp[0].upper()=='Y':
                     self.build_network(exp_no_smarticles)

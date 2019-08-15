@@ -112,7 +112,7 @@ class XbeeComm(object):
         elif (isinstance(remote_device,bool) and remote_device==True):
             self.ack_broadcast(msg)
         else:
-            assert remote_device in self.devices,"Remote Device not found in active devices"
+            # assert remote_device in self.devices,"Remote Device not found in active devices"
             self.send(remote_device,msg)
 
     def add_rx_callback(self, callback_fun):
