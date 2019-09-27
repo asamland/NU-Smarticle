@@ -1,0 +1,12 @@
+[Eagle]
+Version="09 05 01"
+Platform="Mac OS X"
+Globals="Globals"
+Desktop="Desktop"
+
+[Globals]
+AutoSaveProject=1
+UsedLibrary="/Users/alexsamland/Documents/EAGLE/libraries/NU-Smarticle v2.lbr"
+
+[Desktop]
+Screen="3360 1367"
