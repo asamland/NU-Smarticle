@@ -1,0 +1,18 @@
+"Part";"Value";"Device";"Package";"Description";"PROD_ID";"SF_SKU";
+"C1";"9.0pF";"CAP_CERAMIC_0603MP";"_0603MP";"Ceramic Capacitors";"";"";
+"C2";"1.0uF";"CAP_CERAMIC_0603MP";"_0603MP";"Ceramic Capacitors";"";"";
+"C3";"0.1uF";"CAP_CERAMIC_0603MP";"_0603MP";"Ceramic Capacitors";"";"";
+"CON1";"LI-PO";"LI-PO";"1X02_BATT";"Pins connecting to LiPo Battery";"";"";
+"CON100";"12XFFCMOLEX_51281";"12XFFCMOLEX_51281";"MOLEX_51281-1294";"";"";"";
+"M1";"SERVO";"SERVO";"1X03_SERVO";"";"";"";
+"M2";"SERVO";"SERVO";"1X03_SERVO";"";"";"";
+"PH1";"A10";"A10";"PHOTORESISTOR";"Sensor Robust Light Sensing Applications";"";"";
+"PH2";"A10";"A10";"PHOTORESISTOR";"Sensor Robust Light Sensing Applications";"";"";
+"PH3";"A10";"A10";"PHOTORESISTOR";"Sensor Robust Light Sensing Applications";"";"";
+"R1";"10k";"RESISTOR_0603MP";"_0603MP";"Resistors";"";"";
+"R2";"10k";"RESISTOR_0603MP";"_0603MP";"Resistors";"";"";
+"R3";"10k";"RESISTOR_0603MP";"_0603MP";"Resistors";"";"";
+"R100";"0.1";"RESISTOR_0603MP";"_0603MP";"Resistors";"";"";
+"S1";"";"SWITCH-SPDT-SMD-RIGHT-ANGLE";"SWITCH_SPST_SMD_A";"Single Pole, Double Throw (SPDT) Switch";"SWCH-10651";"COM-10860";
+"U1";"XBEE3";"XBEE3";"XBEE3_MICRO";"XBee 3 802.15";"";"";
+"U100";"INA180B2";"INA180B2";"SOT23-5";"50x gain current sense amplifier";"";"";

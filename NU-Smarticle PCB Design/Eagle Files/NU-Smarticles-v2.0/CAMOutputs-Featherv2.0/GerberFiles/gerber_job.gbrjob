@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2019-10-09T18:47:45Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.5.1"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 1.99,
+        "LayerNumber": 4,
+        "Name": {
+            "ProjectId": "feather-v2.0"
+        },
+        "Owner": "Alex Samland <alexsamland@u.northwestern.edu>",
+        "Size": {
+            "X": 48.260944,
+            "Y": 22.86
+        }
+    }
+}
