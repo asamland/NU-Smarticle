@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="Smarticle_URDF">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0201453224666452 -0.0448658716611588 0.0388377863587419"
+        rpy="0 0 0" />
+      <mass
+        value="0.0269834813442291" />
+      <inertia
+        ixx="2.59039726522864E-06"
+        ixy="3.70527539262375E-09"
+        ixz="-2.11824533769868E-08"
+        iyy="6.03159376226408E-06"
+        iyz="-9.87673076363991E-08"
+        izz="5.92223995570276E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Smarticle_URDF/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Smarticle_URDF/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="right_arm">
+    <inertial>
+      <origin
+        xyz="0.0285759578393724 -1.97634308540112E-06 -0.020625500679824"
+        rpy="0 0 0" />
+      <mass
+        value="0.00390817547516661" />
+      <inertia
+        ixx="4.94502559652727E-07"
+        ixy="5.25259688971173E-23"
+        ixz="-7.58600501805202E-08"
+        iyy="1.0975431871728E-06"
+        iyz="4.54949336904165E-24"
+        izz="6.12705540710704E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Smarticle_URDF/meshes/right_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Smarticle_URDF/meshes/right_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_servo"
+    type="continuous">
+    <origin
+      xyz="-0.0017576 -0.044679 0.025242"
+      rpy="-3.1416 0 -3.1366" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_arm" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-3.15"
+      upper="3.15"
+      effort="0.039"
+      velocity="6.283" />
+  </joint>
+  <link
+    name="left_arm">
+    <inertial>
+      <origin
+        xyz="0.0285759132134806 2.02042070958364E-06 -0.0206255006798241"
+        rpy="0 0 0" />
+      <mass
+        value="0.00390817547516661" />
+      <inertia
+        ixx="4.94502559652728E-07"
+        ixy="1.62127400060393E-22"
+        ixz="-7.58600501805201E-08"
+        iyy="1.0975431871728E-06"
+        iyz="2.99852972050473E-23"
+        izz="6.12705540710703E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Smarticle_URDF/meshes/left_arm.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Smarticle_URDF/meshes/left_arm.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_servo"
+    type="continuous">
+    <origin
+      xyz="0.040642 -0.044679 0.025242"
+      rpy="3.1416 0 0.017339" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_arm" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-3.15"
+      upper="3.15"
+      effort="0.039"
+      velocity="6.283" />
+  </joint>
+</robot>
