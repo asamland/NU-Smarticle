@@ -3,22 +3,22 @@
      Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="Smarticle_URDF">
+  name="simulation_urdf">
   <link
     name="base_link">
     <inertial>
       <origin
-        xyz="0.0201453224666452 -0.0448658716611588 0.0388377863587419"
+        xyz="0.027 0.0159265264136033 -0.0121054745241551"
         rpy="0 0 0" />
       <mass
-        value="0.0269834813442291" />
+        value="0.0461924870615736" />
       <inertia
-        ixx="2.59039726522864E-06"
-        ixy="3.70527539262375E-09"
-        ixz="-2.11824533769868E-08"
-        iyy="6.03159376226408E-06"
-        iyz="-9.87673076363991E-08"
-        izz="5.92223995570276E-06" />
+        ixx="6.70628445308697E-06"
+        ixy="1.26245184529807E-21"
+        ixz="-7.7949350325389E-22"
+        iyy="1.42241178598109E-05"
+        iyz="-7.10017186254831E-08"
+        izz="1.40770919658079E-05" />
     </inertial>
     <visual>
       <origin
@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Smarticle_URDF/meshes/base_link.STL" />
+          filename="package://simulation_urdf/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Smarticle_URDF/meshes/base_link.STL" />
+          filename="package://simulation_urdf/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -48,17 +48,17 @@
     name="right_arm">
     <inertial>
       <origin
-        xyz="0.0285759578393724 -1.97634308540112E-06 -0.020625500679824"
+        xyz="-0.0324088671779775 0.0187915778765065 6.93889390390723E-18"
         rpy="0 0 0" />
       <mass
-        value="0.00390817547516661" />
+        value="0.00328492067362327" />
       <inertia
-        ixx="4.94502559652727E-07"
-        ixy="5.25259688971173E-23"
-        ixz="-7.58600501805202E-08"
-        iyy="1.0975431871728E-06"
-        iyz="4.54949336904165E-24"
-        izz="6.12705540710704E-07" />
+        ixx="3.71433880005911E-07"
+        ixy="6.21965185477677E-09"
+        ixz="-5.44300541042791E-22"
+        iyy="3.82355127750986E-07"
+        iyz="-2.39946519733661E-22"
+        izz="7.48915568874076E-07" />
     </inertial>
     <visual>
       <origin
@@ -66,12 +66,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Smarticle_URDF/meshes/right_arm.STL" />
+          filename="package://simulation_urdf/meshes/right_arm.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+          rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
       </material>
     </visual>
     <collision>
@@ -80,43 +80,43 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Smarticle_URDF/meshes/right_arm.STL" />
+          filename="package://simulation_urdf/meshes/right_arm.STL" />
       </geometry>
     </collision>
   </link>
   <joint
-    name="right_servo"
+    name="right_joint"
     type="continuous">
     <origin
-      xyz="-0.0017576 -0.044679 0.025242"
-      rpy="-3.1416 0 -3.1366" />
+      xyz="0.0058 0.0135 0"
+      rpy="1.5708 0 0" />
     <parent
       link="base_link" />
     <child
       link="right_arm" />
     <axis
-      xyz="0 0 1" />
+      xyz="0 1 0" />
     <limit
       lower="-3.15"
       upper="3.15"
-      effort="0.039"
-      velocity="6.283" />
+      effort="0.04"
+      velocity="6.28" />
   </joint>
   <link
     name="left_arm">
     <inertial>
       <origin
-        xyz="0.0285759132134806 2.02042070958364E-06 -0.0206255006798241"
+        xyz="-0.0324088671779775 0.0187915778765065 6.93889390390723E-18"
         rpy="0 0 0" />
       <mass
-        value="0.00390817547516661" />
+        value="0.00328492067362327" />
       <inertia
-        ixx="4.94502559652728E-07"
-        ixy="1.62127400060393E-22"
-        ixz="-7.58600501805201E-08"
-        iyy="1.0975431871728E-06"
-        iyz="2.99852972050473E-23"
-        izz="6.12705540710703E-07" />
+        ixx="3.71433880005911E-07"
+        ixy="6.21965185477668E-09"
+        ixz="-5.52556649185422E-22"
+        iyy="3.82355127750985E-07"
+        iyz="-2.93149386758955E-22"
+        izz="7.48915568874075E-07" />
     </inertial>
     <visual>
       <origin
@@ -124,12 +124,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Smarticle_URDF/meshes/left_arm.STL" />
+          filename="package://simulation_urdf/meshes/left_arm.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+          rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
       </material>
     </visual>
     <collision>
@@ -138,26 +138,26 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Smarticle_URDF/meshes/left_arm.STL" />
+          filename="package://simulation_urdf/meshes/left_arm.STL" />
       </geometry>
     </collision>
   </link>
   <joint
-    name="left_servo"
+    name="left_joint"
     type="continuous">
     <origin
-      xyz="0.040642 -0.044679 0.025242"
-      rpy="3.1416 0 0.017339" />
+      xyz="0.0482 0.0135 0"
+      rpy="1.5708 0 3.0427" />
     <parent
       link="base_link" />
     <child
       link="left_arm" />
     <axis
-      xyz="0 0 1" />
+      xyz="0 1 0" />
     <limit
       lower="-3.15"
       upper="3.15"
-      effort="0.039"
-      velocity="6.283" />
+      effort="0.04"
+      velocity="6.28" />
   </joint>
 </robot>

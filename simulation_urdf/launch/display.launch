@@ -6,7 +6,7 @@
     default="False" />
   <param
     name="robot_description"
-    textfile="$(find Smarticle_URDF)/urdf/Smarticle_URDF.urdf" />
+    textfile="$(find simulation_urdf)/urdf/simulation_urdf.urdf" />
   <param
     name="use_gui"
     value="$(arg gui)" />
@@ -22,5 +22,5 @@
     name="rviz"
     pkg="rviz"
     type="rviz"
-    args="-d $(find Smarticle_URDF)/urdf.rviz" />
+    args="-d $(find simulation_urdf)/urdf.rviz" />
 </launch>
