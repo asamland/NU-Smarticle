@@ -1414,8 +1414,11 @@ design rules under a new name.</description>
 <wire x1="4.682" y1="10.16" x2="2.54" y2="10.16" width="0.254" layer="1"/>
 <wire x1="1.937" y1="10.68" x2="1.778" y2="10.839" width="0.254" layer="1"/>
 <wire x1="1.778" y1="10.839" x2="1.778" y2="11.43" width="0.254" layer="1"/>
+<contactref element="U$1" pad="6"/>
+<contactref element="U$1" pad="7"/>
 <wire x1="1.4725" y1="17.3355" x2="2.037" y2="15.03" width="0" layer="19" extent="1-1"/>
 <wire x1="4.41" y1="7.83" x2="4.837" y2="8.13" width="0" layer="19" extent="1-1"/>
+<wire x1="40.61" y1="14.99" x2="38.1" y2="14.478" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="VBUS">
 <contactref element="JP1" pad="3"/>
@@ -1657,6 +1660,8 @@ design rules under a new name.</description>
 <wire x1="35.58351875" y1="12.827" x2="36.9926" y2="11.41791875" width="0.254" layer="1"/>
 <via x="36.9926" y="11.41791875" extent="1-16" drill="0.5"/>
 <wire x1="22.35" y1="6.209" x2="22.35" y2="5.59" width="0.254" layer="16"/>
+<contactref element="U$1" pad="14"/>
+<wire x1="43.21" y1="15.49" x2="43.21" y2="14.99" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="RESET">
 <contactref element="SW1" pad="B'"/>
@@ -2414,15 +2419,6 @@ design rules under a new name.</description>
 <contactref element="R10" pad="2"/>
 <wire x1="44.605" y1="10.378" x2="44.387" y2="10.16" width="0.254" layer="1"/>
 <wire x1="44.387" y1="10.16" x2="42.926" y2="10.16" width="0.254" layer="1"/>
-</signal>
-<signal name="N$13">
-<contactref element="U$1" pad="14"/>
-</signal>
-<signal name="N$14">
-<contactref element="U$1" pad="7"/>
-</signal>
-<signal name="N$15">
-<contactref element="U$1" pad="6"/>
 </signal>
 <signal name="N$16">
 <contactref element="U$1" pad="2"/>
