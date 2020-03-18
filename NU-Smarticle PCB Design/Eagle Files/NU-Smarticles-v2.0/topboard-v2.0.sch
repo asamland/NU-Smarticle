@@ -400,11 +400,12 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 &lt;p&gt;Example device(s):
 &lt;ul&gt;&lt;li&gt;CONN_03&lt;/li&gt;
 &lt;/ul&gt;&lt;/p&gt;</description>
-<pad name="1" x="0" y="0" drill="0.75" rot="R90"/>
-<pad name="2" x="2.032" y="0" drill="0.75" rot="R90"/>
-<pad name="3" x="4.064" y="0" drill="0.75" rot="R90"/>
-<text x="2.413" y="0.508" size="0.635" layer="21">+</text>
-<text x="4.826" y="0.508" size="0.6096" layer="21">-</text>
+<pad name="1" x="0" y="0" drill="1" rot="R90"/>
+<pad name="2" x="2.032" y="0" drill="1" rot="R90"/>
+<pad name="3" x="4.064" y="0" drill="1" rot="R90"/>
+<text x="2.54" y="0.635" size="0.8128" layer="21">+</text>
+<text x="4.572" y="0.635" size="0.8128" layer="21">-</text>
+<text x="0.508" y="0.635" size="0.8128" layer="21">s</text>
 </package>
 <package name="SOT23-5">
 <description>&lt;b&gt;Small Outline Transistor&lt;/b&gt; - 5 Pin</description>
@@ -717,18 +718,7 @@ Source: http://optoelectronics.perkinelmer.com/content/Datasheets/DTS_Photocells
 <dimension x1="3.95" y1="1.3" x2="2.75" y2="1.3" x3="3.35" y3="10" textsize="1.27" layer="47"/>
 <dimension x1="-3.65" y1="-2" x2="3.65" y2="-2" x3="0" y3="-5" textsize="1.27" layer="47"/>
 <dimension x1="-2.9" y1="0" x2="-2.9" y2="-1.9" x3="-8.65" y3="-0.95" textsize="1.27" layer="47"/>
-<rectangle x1="-2.97" y1="-2.75" x2="-2.53" y2="-1.85" layer="29"/>
-<rectangle x1="-2.47" y1="-2.75" x2="-2.03" y2="-1.85" layer="29"/>
-<rectangle x1="-1.97" y1="-2.75" x2="-1.53" y2="-1.85" layer="29"/>
-<rectangle x1="-1.47" y1="-2.75" x2="-1.03" y2="-1.85" layer="29"/>
-<rectangle x1="-0.97" y1="-2.75" x2="-0.53" y2="-1.85" layer="29"/>
-<rectangle x1="-0.47" y1="-2.75" x2="-0.03" y2="-1.85" layer="29"/>
-<rectangle x1="0.03" y1="-2.75" x2="0.47" y2="-1.85" layer="29"/>
-<rectangle x1="0.53" y1="-2.75" x2="0.97" y2="-1.85" layer="29"/>
-<rectangle x1="1.03" y1="-2.75" x2="1.47" y2="-1.85" layer="29"/>
-<rectangle x1="1.53" y1="-2.75" x2="1.97" y2="-1.85" layer="29"/>
-<rectangle x1="2.03" y1="-2.75" x2="2.47" y2="-1.85" layer="29"/>
-<rectangle x1="2.53" y1="-2.75" x2="2.97" y2="-1.85" layer="29"/>
+<rectangle x1="-2.9954" y1="-2.75" x2="2.97" y2="-1.85" layer="29"/>
 </package>
 </packages>
 <symbols>
@@ -1994,14 +1984,6 @@ Datasheet</description>
 </net>
 <net name="VCC_1" class="0">
 <segment>
-<pinref part="U100" gate="G$1" pin="IN+"/>
-<wire x1="30.48" y1="43.18" x2="30.48" y2="48.26" width="0.1524" layer="91"/>
-<pinref part="R100" gate="G$1" pin="1"/>
-<wire x1="30.48" y1="48.26" x2="30.48" y2="50.8" width="0.1524" layer="91"/>
-<junction x="30.48" y="48.26"/>
-<pinref part="SUPPLY1" gate="G$2" pin="VCC_1"/>
-</segment>
-<segment>
 <pinref part="S1" gate="1" pin="P"/>
 <wire x1="38.1" y1="12.7" x2="33.02" y2="12.7" width="0.1524" layer="91"/>
 <pinref part="SUPPLY2" gate="G$2" pin="VCC_1"/>
@@ -2041,7 +2023,7 @@ Datasheet</description>
 <pinref part="PWR7" gate="G$1" pin="VBAT"/>
 </segment>
 </net>
-<net name="N$1" class="0">
+<net name="IN-" class="0">
 <segment>
 <pinref part="U100" gate="G$1" pin="IN-"/>
 <pinref part="R100" gate="G$1" pin="2"/>
@@ -2056,6 +2038,7 @@ Datasheet</description>
 <wire x1="93.98" y1="30.48" x2="93.98" y2="38.1" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="38.1" x2="55.88" y2="38.1" width="0.1524" layer="91"/>
 <junction x="55.88" y="38.1"/>
+<label x="38.1" y="53.34" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="RXD1" class="0">
@@ -2120,6 +2103,17 @@ Datasheet</description>
 <wire x1="144.78" y1="35.56" x2="152.4" y2="35.56" width="0.1524" layer="91"/>
 <junction x="144.78" y="35.56"/>
 <label x="149.86" y="35.56" size="1.27" layer="95"/>
+</segment>
+</net>
+<net name="IN+" class="0">
+<segment>
+<pinref part="U100" gate="G$1" pin="IN+"/>
+<wire x1="30.48" y1="43.18" x2="30.48" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="R100" gate="G$1" pin="1"/>
+<wire x1="30.48" y1="48.26" x2="30.48" y2="50.8" width="0.1524" layer="91"/>
+<junction x="30.48" y="48.26"/>
+<pinref part="SUPPLY1" gate="G$2" pin="VCC_1"/>
+<label x="27.94" y="50.8" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
